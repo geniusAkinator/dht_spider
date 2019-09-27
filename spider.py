@@ -29,12 +29,22 @@ def random_id():
 def timer(t,f):
 	threading.Timer(t,f).start()
 
+# def custom_decoder(field_type, value):
+# 	if field_type == "key":
+# 		return str(value, "ascii")
+# 	elif field_type == "value":
+# 		return value.decode(encoding="utf-8",errors='strict')
+# 	else:
+# 		raise Exception("'field_type' can pass only 'key' and 'value' values")
+
 print(entropy(20))
 print(random_id()[20:])
 
 class KRPC():
 	def __init__(self):
 		self.socket = socket.socket(socket.AF_INET,socket.SOCK_DGRAM)
+		#timeout 10关闭连接
+		self.socket.setsockopt(socket.SOL_SOCKET,socket.SO_RCVTIMEO, 10*1000) 
 		self.socket.bind(("0.0.0.0", 6881))
 		print("监听")
 	def send_krpc(self,msg,address):
@@ -70,10 +80,10 @@ class Client(KRPC):
 			print("wait")
 			try:
 				(data, address) = self.socket.recvfrom(65536)
-				print(type(data))
-				msg = bdecode(data)
-				print(type(msg))
-				print(msg[b'r'][b'nodes'])
+				# msg = bdecode(data)
+				print(address)
+				print(data)
+				# print(msg[b'r'][b'nodes'])
 			except Exception as e:
 				print(e)
 				sys.exit(1)
